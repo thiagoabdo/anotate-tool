@@ -1,7 +1,7 @@
 class Dataset < ApplicationRecord
-  has_many :roles
+  has_many :roles, dependent: :destroy
   has_many :users, through: :roles
-  has_many :entries
-  has_many :notations, through: :entries
-  has_many :observations
+  has_many :entries, dependent: :destroy
+  has_many :notations, through: :entries, dependent: :destroy
+  has_many :observations, dependent: :destroy
 end

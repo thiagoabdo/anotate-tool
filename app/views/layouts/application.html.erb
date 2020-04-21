@@ -10,13 +10,11 @@
   </head>
 
   <body>
-    <% if user_signed_in? %>
-      <nav>
-        <% [["Home", '/'], ["Datasets", :datasets], ["Entries", :entries], ["Roles", :roles], ['Attributes', :observations], ['PossibleValues', :attr_values], ['notations', :notations]].each do |name,url| %>
-          <li><%= link_to_unless_current(name, url) %></li>
-        <% end %>
-      </nav>
-    <% end %>
+    <nav>
+      <% [["Home", '/'], ["Datasets", :datasets], ["Entries", :entries], ["Roles", :roles], ['Attributes', :observations], ['PossibleValues', :attr_values], ['notations', :notations]].each do |name,url| %>
+        <li><%= link_to_unless_current(name, url) %></li>
+      <% end %>
+    </nav>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
     <%= yield %>
