@@ -3,5 +3,5 @@ class Dataset < ApplicationRecord
   has_many :users, through: :roles
   has_many :entries
   has_many :notations, through: :entries
-  has_many :attributes
+  has_many :observations
 end

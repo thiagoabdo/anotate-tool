@@ -1,10 +1,10 @@
-<%= form_with(model: attribute, local: true) do |form| %>
-  <% if attribute.errors.any? %>
+<%= form_with(model: observation, local: true) do |form| %>
+  <% if observation.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(attribute.errors.count, "error") %> prohibited this attribute from being saved:</h2>
+      <h2><%= pluralize(observation.errors.count, "error") %> prohibited this observation from being saved:</h2>
 
       <ul>
-        <% attribute.errors.full_messages.each do |message| %>
+        <% observation.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
