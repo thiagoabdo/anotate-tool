@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_135235) do
+ActiveRecord::Schema.define(version: 2020_04_21_140744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attributes", force: :cascade do |t|
+    t.string "name"
+    t.bigint "dataset_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dataset_id"], name: "index_attributes_on_dataset_id"
+  end
 
   create_table "datasets", force: :cascade do |t|
     t.string "name"
@@ -30,6 +38,16 @@ ActiveRecord::Schema.define(version: 2020_04_21_135235) do
     t.index ["dataset_id"], name: "index_entries_on_dataset_id"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.binary "role", null: false
+    t.bigint "user_id", null: false
+    t.bigint "dataset_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dataset_id"], name: "index_roles_on_dataset_id"
+    t.index ["user_id"], name: "index_roles_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -42,17 +60,8 @@ ActiveRecord::Schema.define(version: 2020_04_21_135235) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "users_datasets", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "dataset_id", null: false
-    t.binary "role", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["dataset_id"], name: "index_users_datasets_on_dataset_id"
-    t.index ["user_id"], name: "index_users_datasets_on_user_id"
-  end
-
+  add_foreign_key "attributes", "datasets"
   add_foreign_key "entries", "datasets"
-  add_foreign_key "users_datasets", "datasets"
-  add_foreign_key "users_datasets", "users"
+  add_foreign_key "roles", "datasets"
+  add_foreign_key "roles", "users"
 end
