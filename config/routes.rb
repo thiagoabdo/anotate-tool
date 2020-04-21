@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :notations
+  resources :attr_values
   resources :attributes
   resources :roles
   resources :entries

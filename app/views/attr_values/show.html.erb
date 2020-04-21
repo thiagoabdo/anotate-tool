@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @attr_value.value %>
+</p>
+
+<p>
+  <strong>Attribute:</strong>
+  <%= @attr_value.attribute_id %>
+</p>
+
+<%= link_to 'Edit', edit_attr_value_path(@attr_value) %> |
+<%= link_to 'Back', attr_values_path %>

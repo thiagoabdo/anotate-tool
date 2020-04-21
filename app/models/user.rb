@@ -5,4 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_many :roles
   has_many :datasets, through: :roles
+  has_many :notations
 end
