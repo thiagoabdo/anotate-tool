@@ -15,7 +15,7 @@
     <% @attr_values.each do |attr_value| %>
       <tr>
         <td><%= attr_value.value %></td>
-        <td><%= attr_value.attribute_id %></td>
+        <td><%= attr_value.observation_id %></td>
         <td><%= link_to 'Show', attr_value %></td>
         <td><%= link_to 'Edit', edit_attr_value_path(attr_value) %></td>
         <td><%= link_to 'Destroy', attr_value, method: :delete, data: { confirm: 'Are you sure?' } %></td>

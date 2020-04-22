@@ -2,6 +2,8 @@ class RolesController < ApplicationController
   before_action :set_role, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
+  after_action :verify_authorized, except: :index
+
   # GET /roles
   # GET /roles.json
   def index
@@ -16,6 +18,7 @@ class RolesController < ApplicationController
   # GET /roles/new
   def new
     @role = Role.new
+    authorize @role
   end
 
   # GET /roles/1/edit
@@ -26,6 +29,7 @@ class RolesController < ApplicationController
   # POST /roles.json
   def create
     @role = Role.new(role_params)
+    authorize @role
 
     respond_to do |format|
       if @role.save
@@ -66,6 +70,7 @@ class RolesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_role
       @role = Role.find(params[:id])
+      authorize @role
     end
 
     # Only allow a list of trusted parameters through.

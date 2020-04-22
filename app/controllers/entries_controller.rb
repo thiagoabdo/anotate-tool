@@ -2,6 +2,8 @@ class EntriesController < ApplicationController
   before_action :set_entry, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
+  after_action :verify_authorized, except: [ :index, :new ]
+
   # GET /entries
   # GET /entries.json
   def index
@@ -16,16 +18,19 @@ class EntriesController < ApplicationController
   # GET /entries/new
   def new
     @entry = Entry.new
+    @datasets = Dataset.owned_by(current_user.id)
   end
 
   # GET /entries/1/edit
   def edit
+    @datasets = Dataset.owned_by(current_user.id)
   end
 
   # POST /entries
   # POST /entries.json
   def create
     @entry = Entry.new(entry_params)
+    authorize @entry
 
     respond_to do |format|
       if @entry.save
@@ -66,6 +71,7 @@ class EntriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
       @entry = Entry.find(params[:id])
+      authorize @entry
     end
 
     # Only allow a list of trusted parameters through.

@@ -1,7 +1,11 @@
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Layout/LineLength
+
 class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
+  after_action :verify_authorized, except: :index
   # GET /datasets
   # GET /datasets.json
   def index
@@ -16,17 +20,21 @@ class DatasetsController < ApplicationController
   # GET /datasets/new
   def new
     @dataset = Dataset.new
+    authorize @dataset
   end
 
   # GET /datasets/1/edit
   def edit
+
   end
 
   # POST /datasets
   # POST /datasets.json
   def create
     @dataset = Dataset.new(dataset_params)
-
+    @dataset.roles.new([{ user_id: current_user.id, role: 0 }])
+    authorize @dataset
+    
     respond_to do |format|
       if @dataset.save
         format.html { redirect_to @dataset, notice: 'Dataset was successfully created.' }
@@ -66,6 +74,7 @@ class DatasetsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_dataset
       @dataset = Dataset.find(params[:id])
+      authorize @dataset
     end
 
     # Only allow a list of trusted parameters through.

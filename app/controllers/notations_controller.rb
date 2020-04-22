@@ -70,6 +70,6 @@ class NotationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def notation_params
-      params.require(:notation).permit(:attr_value_id, :user_id, :entry_id, :attribute_id)
+      params.require(:notation).permit(:attr_value_id, :user_id, :entry_id, :observation_id)
     end
 end

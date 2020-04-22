@@ -6,6 +6,4 @@ class Dataset < ApplicationRecord
   has_many :observations, dependent: :destroy
 
   scope :owned_by, ->(id) { joins(:roles).merge(Role.owned_by(id)) }
-
-
 end

@@ -15,6 +15,7 @@ class AttrValuesController < ApplicationController
   # GET /attr_values/new
   def new
     @attr_value = AttrValue.new
+    @observations = Observation.from_user_naousar(current_user)
   end
 
   # GET /attr_values/1/edit
@@ -69,6 +70,6 @@ class AttrValuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def attr_value_params
-      params.require(:attr_value).permit(:value, :attribute_id)
+      params.require(:attr_value).permit(:value, :observation_id)
     end
 end
