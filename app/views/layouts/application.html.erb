@@ -10,7 +10,18 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body class="bg-blue-700"> 
+  <body class="bg-blue-500">
+   <div class="bg-black shadow-lg h-12 flex">
+      <div class="text-gray-300 bold px-20 font-sans text-4xl">
+        <p> AutoNotate Tool </p>
+      </div>
+   </div>
+   <div class="">
+   </div>
+   <div class="w-screen h-screen flex">
+     <div class="m-auto">
     <%= yield %>
+    <div>
+   </div>
   </body>
 </html>
