@@ -13,3 +13,8 @@
  *= require_tree .
  *= require_self
  */
+.field input {
+  border: 3px;
+  border-color: #000;
+  background-color: #ccc;
+}
