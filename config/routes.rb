@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :roles
   resources :entries
   resources :datasets
+  resources :datasets do
+    resources :entries
+    resources :observations
+  end
   get 'pages/home'
   devise_for :users
   root to: 'pages#home'

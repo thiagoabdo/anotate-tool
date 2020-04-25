@@ -16,9 +16,7 @@
     <%= form.text_field :text %>
   </div>
 
-  <div class="field">
-    <%= form.select :dataset_id, @datasets.collect {|dataset| [dataset.name + String(dataset.id), dataset.id]} %>
-  </div>
+  <%= form.hidden_field :dataset_id, :value => @dataset.id %>
 
   <div class="actions">
     <%= form.submit %>

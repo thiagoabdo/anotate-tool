@@ -7,7 +7,9 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    @entries = Entry.all
+    @entries = Entry.where(dataset_id: params["dataset_id"])
+    @dataset = Dataset.find(id=params["dataset_id"])
+    render layout: "dataset"
   end
 
   # GET /entries/1
@@ -18,7 +20,8 @@ class EntriesController < ApplicationController
   # GET /entries/new
   def new
     @entry = Entry.new
-    @datasets = Dataset.owned_by(current_user.id)
+    @dataset = Dataset.find(id=params["dataset_id"])
+    render layout: "dataset"
   end
 
   # GET /entries/1/edit
@@ -28,13 +31,14 @@ class EntriesController < ApplicationController
 
   # POST /entries
   # POST /entries.json
-  def create
+  def create  
     @entry = Entry.new(entry_params)
+    @dataset = @entry.dataset
     authorize @entry
 
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to @entry, notice: 'Entry was successfully created.' }
+        format.html { redirect_to @dataset, notice: 'Entry was successfully created.' }
         format.json { render :show, status: :created, location: @entry }
       else
         format.html { render :new }

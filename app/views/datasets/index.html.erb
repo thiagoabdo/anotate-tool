@@ -1,29 +1,18 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Datasets</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="bg-white container rounded-lg p-4" style="width:1024px">
+  <div class="flex justify-end mb-4">
+      <%= link_to "Criar projeto", new_dataset_url, class:"bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"%>
+  </div>
+  <div class="flex justify-evenly">
     <% @datasets.each do |dataset| %>
-      <tr>
-        <td><%= dataset.name %></td>
-        <td><%= dataset.description %></td>
-        <td><%= link_to 'Show', dataset %></td>
-        <td><%= link_to 'Edit', edit_dataset_path(dataset) %></td>
-        <td><%= link_to 'Destroy', dataset, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <div class="border-blue-300 border-2 shadow-lg m-4 rounded-lg p-2 w-64 h-44">
+        <p class="text-xl text-orange-500 text-center border-b-2 border-blue-200 mb-2 overflow-hidden h-10"><%= dataset.name %></p>
+        <p class="text-sm text-gray-800 text-left h-24 overflow-hidden "><%= dataset.description %></p>
+        <div class="flex">
+          <p class="mx-2 bg-orange-400 hover:bg-orange-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"><%= link_to 'Show', dataset %></p>
+          <p class="mx-2 bg-orange-400 hover:bg-orange-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"><%= link_to 'Edit', edit_dataset_path(dataset) %></p>
+          <p class="mx-2 bg-orange-400 hover:bg-orange-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"><%= link_to 'Destroy', dataset, method: :delete, data: { confirm: 'Are you sure?' } %></p>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Dataset', new_dataset_path %>
+  </div>
+</div>
