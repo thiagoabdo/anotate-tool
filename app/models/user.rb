@@ -6,4 +6,7 @@ class User < ApplicationRecord
   has_many :roles
   has_many :datasets, through: :roles
   has_many :notations
+
+  scope :users_of_dataset, ->(id) { joins(:roles).merge(Role.all_of(id))}
+
 end

@@ -8,6 +8,8 @@ class ObservationsController < ApplicationController
   # GET /observations.json
   def index
     @observations = Observation.all
+    @dataset = Dataset.find(id=params["dataset_id"])
+    render layout: "dataset"
   end
 
   # GET /observations/1
@@ -18,13 +20,14 @@ class ObservationsController < ApplicationController
   # GET /observations/new
   def new
     @observation = Observation.new
-    @datasets = Dataset.owned_by(current_user.id)
+    @dataset = Dataset.find(id=params["dataset_id"])
     authorize @observation
+    render layout: "dataset"
   end
 
   # GET /observations/1/edit
   def edit
-    @datasets = Dataset.owned_by(current_user.id)
+    @dataset = @observation.dataset
   end
 
   # POST /observations
@@ -77,6 +80,6 @@ class ObservationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def observation_params
-      params.require(:observation).permit(:name, :dataset_id)
+      params.require(:observation).permit(:name, :dataset_id, attr_values_attributes: [:_destroy, :value, :id])
     end
 end

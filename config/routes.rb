@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post "upload", to: "entries#upload"
     delete "del_entries", to: "entries#destroy_all"
     resources :observations
+    resources :members
   end
   get 'pages/home'
   devise_for :users

@@ -7,5 +7,5 @@ class Dataset < ApplicationRecord
 
   scope :owned_by, ->(id) { joins(:roles).merge(Role.owned_by(id)) }
 
-
+  scope :users_of, ->(id) { joins(:roles).merge(Role.all_of(id))}
 end

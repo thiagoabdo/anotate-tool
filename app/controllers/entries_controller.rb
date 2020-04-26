@@ -46,7 +46,7 @@ class EntriesController < ApplicationController
 
   # GET /entries/1/edit
   def edit
-    @datasets = Dataset.owned_by(current_user.id)
+    @dataset = @entry.dataset
   end
 
   # POST /entries

@@ -1,23 +1,26 @@
 <%= form_with(model: observation, local: true) do |form| %>
-  <% if observation.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(observation.errors.count, "error") %> prohibited this observation from being saved:</h2>
-
-      <ul>
-        <% observation.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
 
-  <div class="field">
-    <%= form.select :dataset_id, @datasets.collect {|dataset| [dataset.name + String(dataset.id), dataset.id]} %>
+  <%= form.hidden_field :dataset_id, :value => @dataset.id%>
+
+  <h1>Observation</h1>
+  <div data-controller="nested-form">
+    <template data-target='nested-form.template'>
+      <%= form.fields_for :attr_values, AttrValue.new, child_index: 'TEMPLATE_RECORD' do |task| %>
+        <%= render 'attr_fields', form: task %>
+      <% end %>
+    </template>
+
+    <%= form.fields_for :attr_values do |task| %>
+      <%= render 'attr_fields', form: task %>
+    <% end %>
+
+    <div data-target="nested-form.add_item">
+      <%= link_to "Add Item", "#", data: { action: "nested-form#add_association" } %>
+    </div>
   </div>
 
   <div class="actions">

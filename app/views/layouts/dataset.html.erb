@@ -5,7 +5,7 @@
 <div class="container bg-white grid grid-cols-12 rounded-lg" style="width:1024px">
   <div class="col-start-1 col-end-3">
     <div class="mx-auto pt-8 p-4 border-r-2 border-blue-200 grid">
-      <% itemsdomenu = [["Resumo", dataset_url(@dataset)], ["Entradas", dataset_entries_url(@dataset)], ["Membros", "pages_home"], ["Classes", dataset_observations_url(@dataset)], ["Anotar", "pages_home"] ] %>
+      <% itemsdomenu = [["Resumo", dataset_url(@dataset)], ["Entradas", dataset_entries_url(@dataset)], ["Membros", dataset_members_url(@dataset)], ["Classes", dataset_observations_url(@dataset)], ["Anotar", "pages_home"] ] %>
       <% itemsdomenu.each do |menuitem| %>
         <%= link_to menuitem[0], menuitem[1], class:"mb-4 px-4 py-2 text-center border-orange-500 border-2 rounded-full hover:shadow-lg hover:border-orange-700 hover:bg-indigo-400 w-full"%> 
       <% end %>

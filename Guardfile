@@ -20,8 +20,6 @@ guard 'livereload', apply_css_live: false do
     css: :css,
     scss: :css,
     sass: :css,
-    js: :js,
-    coffee: :js,
     html: :html,
     png: :png,
     gif: :gif,
@@ -50,6 +48,6 @@ guard 'livereload', apply_css_live: false do
 
   # file needing a full reload of the page anyway
   watch(%r{app/views/.+\.(#{rails_view_exts * '|'})$})
-  watch(%r{app/helpers/.+\.rb})
-  watch(%r{config/locales/.+\.yml})
+  #watch(%r{app/helpers/.+\.rb})
+  #watch(%r{config/locales/.+\.yml})
 end

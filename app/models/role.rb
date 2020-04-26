@@ -7,4 +7,7 @@ class Role < ApplicationRecord
 
   scope :anotator_by, ->(id) { where(user_id: id, role: 1) }
   scope :anotator_of, ->(id) { where(dataset_id: id, role: 1)}
+
+  scope :all_by, ->(id)  { where(user_id: id) }
+  scope :all_of, ->(id) { where(dataset_id: id)}
 end
