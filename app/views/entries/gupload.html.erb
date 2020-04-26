@@ -1,0 +1,8 @@
+<div>
+  <%= form_tag({action: :upload}, multipart: true) do%>
+    <%= file_field_tag 'csv_entries'%>
+    <%= hidden_field_tag 'dataset_id', @dataset.id%>
+    <%= submit_tag 'Enviar'%>
+
+  <% end %>   
+</div>

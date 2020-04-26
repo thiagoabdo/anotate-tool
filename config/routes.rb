@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :datasets
   resources :datasets do
     resources :entries
+    get "upload", to: "entries#gupload"
+    post "upload", to: "entries#upload"
+    delete "del_entries", to: "entries#destroy_all"
     resources :observations
   end
   get 'pages/home'

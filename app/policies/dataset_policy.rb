@@ -11,6 +11,8 @@ class DatasetPolicy < ApplicationPolicy
 
   def create?; true; end
 
+  def upload?; user_is_owner_of_record?; end
+  def destroy_all?; user_is_owner_of_record?; end
 
   private
   def user_is_owner_of_record?

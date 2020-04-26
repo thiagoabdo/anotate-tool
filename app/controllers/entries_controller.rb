@@ -2,7 +2,27 @@ class EntriesController < ApplicationController
   before_action :set_entry, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
-  after_action :verify_authorized, except: [ :index, :new ]
+  after_action :verify_authorized, except: [ :index, :new, :gupload ]
+
+
+  def gupload
+    @dataset = Dataset.find(id=params["dataset_id"])
+    render layout: "dataset"
+  end
+
+  def upload
+    @dataset = Dataset.find(id=params["dataset_id"])
+    authorize @dataset
+    # uploaded_io = params[:csv_entries]
+    # File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
+    #   file.write(uploaded_io.read)
+    # end
+    Entry.import(params[:csv_entries], params["dataset_id"])
+    respond_to do |format|
+      format.html { redirect_to dataset_entries_url(@dataset), notice: 'Database was reseted.' }
+      format.json { head :no_content }
+    end
+  end
 
   # GET /entries
   # GET /entries.json
@@ -51,8 +71,9 @@ class EntriesController < ApplicationController
   # PATCH/PUT /entries/1.json
   def update
     respond_to do |format|
+      @dataset = @entry.dataset
       if @entry.update(entry_params)
-        format.html { redirect_to @entry, notice: 'Entry was successfully updated.' }
+        format.html { redirect_to dataset_entries_url(@dataset), notice: 'Entry was successfully updated.' }
         format.json { render :show, status: :ok, location: @entry }
       else
         format.html { render :edit }
@@ -64,9 +85,20 @@ class EntriesController < ApplicationController
   # DELETE /entries/1
   # DELETE /entries/1.json
   def destroy
+    @dataset = @entry.dataset
     @entry.destroy
     respond_to do |format|
-      format.html { redirect_to entries_url, notice: 'Entry was successfully destroyed.' }
+      format.html { redirect_to dataset_entries_url(@dataset), notice: 'Entry was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def destroy_all
+    @dataset = Dataset.find(params["dataset_id"])
+    authorize @dataset
+    Entry.where(:dataset_id => params["dataset_id"]).destroy_all
+    respond_to do |format|
+      format.html { redirect_to dataset_entries_url(@dataset), notice: 'Database was reseted.' }
       format.json { head :no_content }
     end
   end
