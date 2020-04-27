@@ -32,7 +32,7 @@ guard 'livereload', apply_css_live: false do
 
   # file types LiveReload may optimize refresh for
   compiled_exts = extensions.values.uniq
-  watch(%r{public/.+\.(#{compiled_exts * '|'})})
+  #watch(%r{public/.+\.(#{compiled_exts * '|'})})
 
   extensions.each do |ext, type|
     watch(%r{

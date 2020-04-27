@@ -1,5 +1,19 @@
-<h1>New Notation</h1>
+<div class="flex flex-col flex-grow items-center">
+  <%# <h1 class="mt-4 mx-auto mb-20">Escolha a classe do Exemplo</h1> %>
 
-<%= render 'form', notation: @notation %>
-
-<%= link_to 'Back', notations_path %>
+  <p class="text-3xl mt-10"> <%= @entry.text %></p>
+  <div class="flex justify-evenly w-full mt-10">
+    <% @observation.attr_values.each do |item| %>
+      <%= form_with(model: @notation, local: true, class: "inline-block") do |form|%>
+        <%= form.hidden_field :user_id, :value => current_user.id %>
+        <%= form.hidden_field :observation_id, :value => @observation.id %>
+        <%= form.hidden_field :attr_value_id, :value => item.id %>
+        <%= form.hidden_field :entry_id, :value => @entry.id %>
+        <%= form.submit item.value, class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"%>
+      <% end %>
+    <% end %>
+  </div>
+  <span class="mt-10">
+    <%= link_to 'Voltar para Classes', dataset_choose_class_url(@dataset), class:"mt-4 inline-block text-gray-700 font-bold border-2 border-orange-200 py-2 px-4 rounded-full hover:text-black hover:border-orange-500 focus:outline-none focus:shadow-outline" %>
+  </span>
+</div>

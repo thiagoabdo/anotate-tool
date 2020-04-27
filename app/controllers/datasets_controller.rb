@@ -39,7 +39,25 @@ class DatasetsController < ApplicationController
     redirect_to @dataset
   end
 
+  def download
+    @dataset = Dataset.find(params[:dataset_id])
+    authorize @dataset, :update?
+    render layout: "dataset"
+  end
 
+  def generate
+    @dataset = Dataset.find(params[:dataset_id])
+    authorize @dataset, :update?
+    entries = Entry.where(:dataset_id => params[:dataset_id])
+    classes = Observation.where(:dataset_id => params[:dataset_id]).pluck(:name)
+    csv = CSV.generate(headers: true) do |csv|
+      csv << [classes[0]]
+      entries.each do |e|
+        csv << [e.text]
+      end
+    end
+    redirect_to send_data csv, :disposition => "attachment; filename=dataset.csv", :type => 'text/csv; charset=iso-8859-1; header=present'
+  end
 
   # GET /datasets/new
   def new

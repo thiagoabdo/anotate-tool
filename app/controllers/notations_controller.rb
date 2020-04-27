@@ -18,20 +18,35 @@ class NotationsController < ApplicationController
   # GET /notations/new
   def new
     @notation = Notation.new
+    @dataset = params[:dataset_id]
+    @observation = Observation.find(params[:observation_id])
+    @entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).pluck(:entry_id)).first
+    if !@entry
+      redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'
+      return
+    end
+    render layout: "dataset"
   end
 
   # GET /notations/1/edit
   def edit
   end
 
+  def choose
+    @classes = Observation.where(:dataset_id => params[:dataset_id])
+    @dataset = Dataset.find(params["dataset_id"])
+    render layout: "dataset"
+  end
+
   # POST /notations
   # POST /notations.json
   def create
     @notation = Notation.new(notation_params)
-
+    d = @notation.observation.dataset_id
+    c = @notation.observation_id
     respond_to do |format|
       if @notation.save
-        format.html { redirect_to @notation, notice: 'Notation was successfully created.' }
+        format.html { redirect_to new_dataset_observation_notation_url(d, c), notice: 'Notation was successfully created.' }
         format.json { render :show, status: :created, location: @notation }
       else
         format.html { render :new }

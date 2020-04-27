@@ -1,6 +1,6 @@
 class Entry < ApplicationRecord
   belongs_to :dataset, optional: true
-  has_many :notations
+     :notations
 
   require 'csv'
   def self.import(file, id)

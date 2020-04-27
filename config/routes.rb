@@ -13,10 +13,14 @@ Rails.application.routes.draw do
     post "upload", to: "entries#upload"
     get "share_link"
     delete "del_entries", to: "entries#destroy_all"
-    resources :observations
+    resources :observations do
+      resources :notations
+    end
     resources :members
     resources :notations
     get "choose_class", to: "notations#choose"
+    get "download"
+    post "download", to: "datasets#generate"
   end
   get 'pages/home'
   devise_for :users
