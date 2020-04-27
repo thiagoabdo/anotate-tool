@@ -5,7 +5,7 @@ class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :enter]
   # GET /datasets
   # GET /datasets.json
   def index
@@ -17,6 +17,29 @@ class DatasetsController < ApplicationController
   def show
     render layout: "dataset"
   end
+
+  def share_link
+    @dataset = Dataset.find(params["dataset_id"])
+    authorize @dataset, :update?
+    if @dataset.share_link
+      @dataset.share_link = nil
+    else
+      @dataset.share_link = SecureRandom.hex 8
+    end
+    @dataset.save
+    redirect_to proc { dataset_members_url(@dataset) }
+  end
+
+  def enter
+    @dataset = Dataset.where(:share_link => params["id"]).first
+    unless @dataset.roles.pluck(:user_id).include?(current_user.id)
+      @dataset.roles.new([{user_id: current_user.id, role: 1}])
+      @dataset.save
+    end
+    redirect_to @dataset
+  end
+
+
 
   # GET /datasets/new
   def new

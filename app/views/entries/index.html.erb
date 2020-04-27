@@ -10,7 +10,9 @@
     <thead>
       <tr>
         <th class="px-4 py-2 w-3/4">Exemplo</th>
-        <th class="px-4 py-2 w-1/4" colspan="3">Ações</th>
+        <% if policy(@dataset).update? %>
+          <th class="px-4 py-2 w-1/4" colspan="3">Ações</th>
+        <% end %>
       </tr>
     </thead>
 
@@ -18,9 +20,11 @@
       <% @entries.each do |entry| %>
         <tr>
           <td class="h-10 m-2 border-gray-800 border-2 overflow-hidden"><%= entry.text %></td>
-          <td class="border-gray-800 border-2 m-2"><%= link_to 'Show', entry %></td>
-          <td class="border-gray-800 border-2 m-2"><%= link_to 'Edit', edit_entry_path(entry) %></td>
-          <td class="border-gray-800 border-2 m-2"><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% if policy(@dataset).update? %>
+            <td class="border-gray-800 border-2 m-2"><%= link_to 'Show', entry %></td>
+            <td class="border-gray-800 border-2 m-2"><%= link_to 'Edit', edit_entry_path(entry) %></td>
+            <td class="border-gray-800 border-2 m-2"><%= link_to 'Destroy', entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
         </tr>
       <% end %>
     </tbody>

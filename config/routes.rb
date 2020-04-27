@@ -5,10 +5,13 @@ Rails.application.routes.draw do
   resources :roles
   resources :entries
   resources :datasets
+
+  get 'dataset/enter/:id', to: "datasets#enter", as: "dataset_enter"
   resources :datasets do
     resources :entries
     get "upload", to: "entries#gupload"
     post "upload", to: "entries#upload"
+    get "share_link"
     delete "del_entries", to: "entries#destroy_all"
     resources :observations
     resources :members

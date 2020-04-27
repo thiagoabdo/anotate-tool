@@ -7,7 +7,7 @@ class ObservationsController < ApplicationController
   # GET /observations
   # GET /observations.json
   def index
-    @observations = Observation.all
+    @observations = Observation.where(:dataset_id => params["dataset_id"])
     @dataset = Dataset.find(id=params["dataset_id"])
     render layout: "dataset"
   end
