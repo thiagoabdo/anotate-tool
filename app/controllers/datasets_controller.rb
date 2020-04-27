@@ -9,7 +9,7 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.all
+    @datasets = Dataset.participant(current_user.id)
   end
 
   # GET /datasets/1
@@ -49,7 +49,7 @@ class DatasetsController < ApplicationController
 
   # GET /datasets/1/edit
   def edit
-
+    render layout: "dataset"
   end
 
   # POST /datasets

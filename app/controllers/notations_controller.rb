@@ -6,6 +6,8 @@ class NotationsController < ApplicationController
   # GET /notations.json
   def index
     @notations = Notation.all
+    @dataset = Dataset.find(params["dataset_id"])
+    render layout: "dataset"
   end
 
   # GET /notations/1

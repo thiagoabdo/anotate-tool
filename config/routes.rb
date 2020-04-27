@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     delete "del_entries", to: "entries#destroy_all"
     resources :observations
     resources :members
+    resources :notations
+    get "choose_class", to: "notations#choose"
   end
   get 'pages/home'
   devise_for :users
