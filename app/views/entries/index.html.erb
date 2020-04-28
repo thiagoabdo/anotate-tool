@@ -4,7 +4,7 @@
     <div class="flex w-full justify-around">
       <%= link_to "Enviar CSV", dataset_upload_url, class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
       <%= link_to "Deletar Base",  dataset_del_entries_url(@dataset), method: :delete, data: { confirm: 'Are you sure? There is no comming back' }, class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
-      <%= link_to "Adicionar Entrada", pages_home_url, class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+      <%= link_to "Adicionar Entrada", "#", class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
     </div>  
   <% end %>
   <div class="self-stretch overflow-y-auto overflow-x-hidden" style="max-height:250px">

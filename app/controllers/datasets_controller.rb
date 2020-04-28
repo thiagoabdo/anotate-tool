@@ -3,7 +3,7 @@
 
 class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!
 
   after_action :verify_authorized, except: [:index, :enter]
   # GET /datasets
@@ -49,14 +49,49 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.find(params[:dataset_id])
     authorize @dataset, :update?
     entries = Entry.where(:dataset_id => params[:dataset_id])
-    classes = Observation.where(:dataset_id => params[:dataset_id]).pluck(:name)
+    classes = Observation.where(:dataset_id => params[:dataset_id])
+    notations = Notation.where(:dataset_id => params[:dataset_id])
+    headers = ['texto'] + classes.pluck(:name)
+    confi = params[:confidence].empty? ? 0 : Integer(params[:confidence]) 
     csv = CSV.generate(headers: true) do |csv|
-      csv << [classes[0]]
+      csv << headers
       entries.each do |e|
-        csv << [e.text]
+        line = []
+        line << e.text
+        classes.each do |c|
+          count = c.notations.where(:entry => e).pluck('notations.attr_value_id').tally.sort_by{|k,v| v}.reverse
+          if count.size >= 2 
+            if count[0][1] != count[1][1]
+              if count[0][1] >= confi
+                max_id = count[0][0]
+              end
+              logger.debug(max_id)
+              text = "-1"
+            else
+              max_id = nil
+              text = "Empate"
+            end
+          else
+            if count.size > 0
+              if count[0][1] >= confi
+                max_id = count[0][0]
+              end
+              logger.debug(max_id)
+              text = "-1"
+            else
+              max_id = nil
+              text = "0"
+            end
+          end
+          if max_id
+            text = AttrValue.find(max_id).value
+          end
+          line << text
+        end
+        csv << line
       end
     end
-    redirect_to send_data csv, :disposition => "attachment; filename=dataset.csv", :type => 'text/csv; charset=iso-8859-1; header=present'
+    send_data csv, :disposition => "attachment; filename=dataset.csv", :type => 'text/csv; charset=iso-8859-1; header=present'
   end
 
   # GET /datasets/new
@@ -84,7 +119,7 @@ class DatasetsController < ApplicationController
       else
         format.html { render :new }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
-      end
+      end 
     end
   end
 

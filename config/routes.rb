@@ -22,8 +22,7 @@ Rails.application.routes.draw do
     get "download"
     post "download", to: "datasets#generate"
   end
-  get 'pages/home'
   devise_for :users
-  root to: 'pages#home'
+  root to: 'datasets#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

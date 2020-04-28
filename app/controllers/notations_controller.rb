@@ -20,7 +20,9 @@ class NotationsController < ApplicationController
     @notation = Notation.new
     @dataset = params[:dataset_id]
     @observation = Observation.find(params[:observation_id])
-    @entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).pluck(:entry_id)).first
+    #@entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).select(:entry_id)).first  
+    sub_query = Notation.from_user_obs(current_user.id, params[:observation_id]).to_sql
+    @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
     if !@entry
       redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'
       return
