@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: autonotate_production
-  username: autonotate
-  password: <%= ENV['AUTONOTATE_DATABASE_PASSWORD'] %>
+  #username: autonotate
+  #  password: <%= ENV['AUTONOTATE_DATABASE_PASSWORD'] %>

@@ -38,7 +38,7 @@ class ObservationsController < ApplicationController
 
     respond_to do |format|
       if @observation.save
-        format.html { redirect_to @observation, notice: 'Observation was successfully created.' }
+        format.html { redirect_to dataset_observations_url(@observation.dataset), notice: 'Observation was successfully created.' }
         format.json { render :show, status: :created, location: @observation }
       else
         format.html { render :new }
