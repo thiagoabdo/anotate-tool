@@ -10,6 +10,12 @@ class NotationsController < ApplicationController
     render layout: "dataset"
   end
 
+  def my_notations
+    @notations = Notation.where(:user_id => current_user.id)
+    @dataset = params[:dataset_id]
+    render layout: "dataset"
+  end
+
   # GET /notations/1
   # GET /notations/1.json
   def show

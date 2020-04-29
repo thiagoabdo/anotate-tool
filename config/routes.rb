@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     end
     resources :members
     resources :notations
+    get "mynotations", to: "notations#my_notations"
     get "choose_class", to: "notations#choose"
     get "download"
     post "download", to: "datasets#generate"
