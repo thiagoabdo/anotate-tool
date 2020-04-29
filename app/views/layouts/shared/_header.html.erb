@@ -18,8 +18,8 @@
         <% if user_signed_in? %>
           <div class="flex align-middle">
             <%= link_to "Seus projetos", datasets_url, class:"text-black inline-block mt-1 mb-2 py-2 px-4 border-blue-200 border-l-2 border-r-2 rounded-l hover:shadow-sm hover:bg-blue-300"%>
-            <a href="#" class="text-black inline-block mt-1 mb-2 py-2 px-4 border-blue-200 border-r-2 hover:shadow-sm hover:bg-blue-300"> Explorar projetos </a>
-            <a href="#" class="text-black inline-block mt-1 mb-2 py-2 px-4 border-blue-200 border-r-2 rounded-r hover:shadow-sm hover:bg-blue-300"> Seu perfil </a>
+            <%# <a href="#" class="text-black inline-block mt-1 mb-2 py-2 px-4 border-blue-200 border-r-2 hover:shadow-sm hover:bg-blue-300"> Explorar projetos </a> %>
+            <%# <a href="#" class="text-black inline-block mt-1 mb-2 py-2 px-4 border-blue-200 border-r-2 rounded-r hover:shadow-sm hover:bg-blue-300"> Seu perfil </a> %>
           </div>
           <div class="flex align-middle">
           <%= link_to "Sair", destroy_user_session_path, method: :delete, class:"text-black inline-block mt-1 mb-2 px-4 py-2 border-blue-400 rounded border-2 hover:shadow-sm hover:bg-blue-300" %>
