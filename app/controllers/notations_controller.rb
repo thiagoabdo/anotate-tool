@@ -1,6 +1,7 @@
 class NotationsController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:get_all_notations]
   before_action :set_notation, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :get_all_notations]
 
   # GET /notations
   # GET /notations.json

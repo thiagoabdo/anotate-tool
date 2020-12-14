@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_110121) do
+ActiveRecord::Schema.define(version: 2020_12_12_144047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,36 @@ ActiveRecord::Schema.define(version: 2020_04_27_110121) do
     t.index ["dataset_id"], name: "index_entries_on_dataset_id"
   end
 
+  create_table "ml_features", force: :cascade do |t|
+    t.bigint "entry_id"
+    t.string "feature"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entry_id"], name: "index_ml_features_on_entry_id"
+  end
+
+  create_table "ml_notations", force: :cascade do |t|
+    t.bigint "entry_id", null: false
+    t.bigint "attr_value_id", null: false
+    t.bigint "observation_id", null: false
+    t.float "certain"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["attr_value_id"], name: "index_ml_notations_on_attr_value_id"
+    t.index ["entry_id"], name: "index_ml_notations_on_entry_id"
+    t.index ["observation_id"], name: "index_ml_notations_on_observation_id"
+  end
+
+  create_table "ml_orders", force: :cascade do |t|
+    t.bigint "entry_id", null: false
+    t.bigint "observation_id", null: false
+    t.integer "order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entry_id"], name: "index_ml_orders_on_entry_id"
+    t.index ["observation_id"], name: "index_ml_orders_on_observation_id"
+  end
+
   create_table "notations", force: :cascade do |t|
     t.bigint "attr_value_id", null: false
     t.bigint "user_id", null: false
@@ -57,6 +87,12 @@ ActiveRecord::Schema.define(version: 2020_04_27_110121) do
     t.bigint "dataset_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "accuracy"
+    t.float "f1_score"
+    t.datetime "last_run"
+    t.integer "k_fold"
+    t.boolean "interactive_learn"
+    t.boolean "active_learn"
     t.index ["dataset_id"], name: "index_observations_on_dataset_id"
   end
 
@@ -84,6 +120,11 @@ ActiveRecord::Schema.define(version: 2020_04_27_110121) do
 
   add_foreign_key "attr_values", "observations"
   add_foreign_key "entries", "datasets"
+  add_foreign_key "ml_notations", "attr_values"
+  add_foreign_key "ml_notations", "entries"
+  add_foreign_key "ml_notations", "observations"
+  add_foreign_key "ml_orders", "entries"
+  add_foreign_key "ml_orders", "observations"
   add_foreign_key "notations", "attr_values"
   add_foreign_key "notations", "entries"
   add_foreign_key "notations", "observations"

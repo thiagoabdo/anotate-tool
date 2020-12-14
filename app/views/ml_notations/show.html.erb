@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Entry:</strong>
+  <%= @ml_notation.entry_id %>
+</p>
+
+<p>
+  <strong>Attr value:</strong>
+  <%= @ml_notation.attr_value_id %>
+</p>
+
+<p>
+  <strong>Observation:</strong>
+  <%= @ml_notation.observation_id %>
+</p>
+
+<p>
+  <strong>Certain:</strong>
+  <%= @ml_notation.certain %>
+</p>
+
+<%= link_to 'Edit', edit_ml_notation_path(@ml_notation) %> |
+<%= link_to 'Back', ml_notations_path %>

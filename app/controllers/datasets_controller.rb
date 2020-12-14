@@ -30,6 +30,14 @@ class DatasetsController < ApplicationController
     redirect_to proc { dataset_members_url(@dataset) }
   end
 
+  def inference
+    @dataset= Dataset.find(params["dataset_id"])
+    @observations = Observation.where(:dataset_id => params["dataset_id"])
+    authorize @dataset, :update?
+    render layout: "dataset"
+  end
+
+
   def enter
     @dataset = Dataset.where(:share_link => params["id"]).first
     unless @dataset.roles.pluck(:user_id).include?(current_user.id)

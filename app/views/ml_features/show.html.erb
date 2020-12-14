@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @ml_feature.belongs_to %>
+</p>
+
+<p>
+  <strong>String:</strong>
+  <%= @ml_feature.string %>
+</p>
+
+<%= link_to 'Edit', edit_ml_feature_path(@ml_feature) %> |
+<%= link_to 'Back', ml_features_path %>

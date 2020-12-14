@@ -1,0 +1,37 @@
+<%= form_with(model: ml_notation, local: true) do |form| %>
+  <% if ml_notation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ml_notation.errors.count, "error") %> prohibited this ml_notation from being saved:</h2>
+
+      <ul>
+        <% ml_notation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :entry_id %>
+    <%= form.text_field :entry_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attr_value_id %>
+    <%= form.text_field :attr_value_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :observation_id %>
+    <%= form.text_field :observation_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :certain %>
+    <%= form.text_field :certain %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

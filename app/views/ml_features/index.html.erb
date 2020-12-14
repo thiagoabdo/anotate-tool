@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Ml Features</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Belongs to</th>
+      <th>String</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ml_features.each do |ml_feature| %>
+      <tr>
+        <td><%= ml_feature.belongs_to %></td>
+        <td><%= ml_feature.string %></td>
+        <td><%= link_to 'Show', ml_feature %></td>
+        <td><%= link_to 'Edit', edit_ml_feature_path(ml_feature) %></td>
+        <td><%= link_to 'Destroy', ml_feature, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ml Feature', new_ml_feature_path %>

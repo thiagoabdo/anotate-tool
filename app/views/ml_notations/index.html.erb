@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Ml Notations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Entry</th>
+      <th>Attr value</th>
+      <th>Observation</th>
+      <th>Certain</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ml_notations.each do |ml_notation| %>
+      <tr>
+        <td><%= ml_notation.entry_id %></td>
+        <td><%= ml_notation.attr_value_id %></td>
+        <td><%= ml_notation.observation_id %></td>
+        <td><%= ml_notation.certain %></td>
+        <td><%= link_to 'Show', ml_notation %></td>
+        <td><%= link_to 'Edit', edit_ml_notation_path(ml_notation) %></td>
+        <td><%= link_to 'Destroy', ml_notation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ml Notation', new_ml_notation_path %>

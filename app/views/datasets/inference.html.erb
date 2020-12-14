@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+<div class="p-4">
+<table class="table-fixed w-full">
+  <thead>
+    <tr>
+      <th class="w-1/12">Classe</th>
+      <!-- <% if policy(@dataset).update? %> -->
+      <th class="w-1/12">Aprendizado Ativo</th>
+      <th class="w-1/12">Aprendizado Iterativo</th>
+      <th class="w-1/12">K-Fold</th>
+      <th class="w-2/12">Ultimo treino</th>
+      <th class="w-1/12">Acerto</th>
+      <th class="w-1/12">Métrica F-1</th>
+      <!-- <% end %> -->
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @observations.each do |observation| %>
+      <tr>
+        <td class="h-10 m-2 border-gray-800 border-2 overflow-hidden"><%= observation.name %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.active_learn ? "Desativar AA" : "Ativar AA", observation_aa_path(observation), method: :post %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.interactive_learn ? 'Desativar AI' : 'Ativar AI', observation_ai_path(observation), method: :post %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.k_fold ? 'Editar K-Fold' : 'Ativar K-Fold', observation_kfold_url(observation)  %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= observation.last_run %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= observation.accuracy %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= observation.f1_score %></td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>

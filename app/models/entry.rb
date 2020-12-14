@@ -1,6 +1,10 @@
 class Entry < ApplicationRecord
   belongs_to :dataset, optional: true
   has_many :notations
+  has_one :ml_feature, dependent: :destroy
+  has_many :ml_notations, dependent: :destroy
+  has_many :ml_orders, dependent: :destroy
+  
 
   require 'csv'
   def self.import(file, id)

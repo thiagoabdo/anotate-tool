@@ -10,6 +10,11 @@ class ObservationPolicy < ApplicationPolicy
   def create? ; user_is_owner_of_dataset? ; end
   def update? ; user_is_owner_of_dataset? ; end
   def destroy? ; user_is_owner_of_dataset? ; end
+  def active_learn? ; user_is_owner_of_dataset? ; end
+  def interactive_learn? ; user_is_owner_of_dataset? ; end
+  def put_kfold? ; user_is_owner_of_dataset? ; end
+  def delete_kfold? ; user_is_owner_of_dataset? ; end
+
 
   private
   def user_is_owner_of_dataset?
