@@ -10,15 +10,24 @@ Rails.application.routes.draw do
   resources :datasets
 
   resources :observations do
-    post "aa", to: "observations#active_learn"
-    post "ai", to: "observations#interactive_learn"
+    get "aa", to: "observations#active_learn"
+    get "ai", to: "observations#interactive_learn"
     get "kfold", to: "observations#kfold"
     get "getall", to: "observations#getall"
     get "getallentries", to: "observations#getallentries"
     get "getallnot", to: "observations#getallnot"
+    get "getallattr", to: "observations#getallattr"
+    put "reportstats", to: "observations#reportstats"
     post "new_kfold"
     delete "delete_kfold"
+    delete "delete_aa", to: "observations#delete_active_learn"
+    delete "delete_ai", to: "observations#delete_interactive_learn"
+    put "put_aa", to: "observations#put_active_learn"
+    put "put_ai", to: "observations#put_interactive_learn"
     put "put_kfold"
+
+    put "ml_notation", to: "observations#put_ml_notation"
+    put "ml_order", to: "observations#put_ml_order"
   end
   get 'observation/getalllearn', to: "observations#getalllearn"
 
@@ -42,7 +51,7 @@ Rails.application.routes.draw do
     get "download"
     post "download", to: "datasets#generate"
     get "needfeatures", to: "ml_features#needfeatures"
-    get "getallentries", to: "ml_features#getall"
+    get "getallfeatures", to: "ml_features#getall"
     get "inference"
   end
   devise_for :users

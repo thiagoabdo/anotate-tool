@@ -5,7 +5,7 @@ class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
-  after_action :verify_authorized, except: [:index, :enter]
+  after_action :verify_authorized, except: [:index, :enter, :inference]
   # GET /datasets
   # GET /datasets.json
   def index
@@ -33,7 +33,7 @@ class DatasetsController < ApplicationController
   def inference
     @dataset= Dataset.find(params["dataset_id"])
     @observations = Observation.where(:dataset_id => params["dataset_id"])
-    authorize @dataset, :update?
+    #authorize @dataset, :update?
     render layout: "dataset"
   end
 

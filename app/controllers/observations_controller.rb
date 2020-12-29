@@ -1,9 +1,9 @@
 class ObservationsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:getall]
-  before_action :authenticate_user!, except: [:index, :show, :getalllearn, :getall, :getallentries, :getallnot]
+  skip_before_action :verify_authenticity_token, only: [:getall, :reportstats, :put_ml_notation, :put_ml_order]
+  before_action :authenticate_user!, except: [:index, :show, :getalllearn, :getall, :getallentries, :getallnot, :getallattr , :reportstats, :put_ml_notation, :put_ml_order]
   before_action :set_observation, only: [:show, :edit, :update, :destroy]
 
-  after_action :verify_authorized, except: [:index, :kfold, :getalllearn, :getall, :getallentries, :getallnot ]
+  after_action :verify_authorized, except: [:index, :kfold, :active_learn, :interactive_learn, :getalllearn, :getall, :getallentries, :getallnot, :getallattr, :reportstats, :put_ml_notation, :put_ml_order]
 
   # GET /observations
   # GET /observations.json
@@ -61,6 +61,14 @@ class ObservationsController < ApplicationController
     end
   end
 
+  def getallattr
+    @observation = Observation.find(id=params["observation_id"])
+    @attr = AttrValue.where(observation: @observation)
+
+    respond_to do |format|
+      format.json { render json: @attr}
+    end
+  end
   # GET /observations/new
   def new
     @observation = Observation.new
@@ -69,21 +77,66 @@ class ObservationsController < ApplicationController
     render layout: "dataset"
   end
 
-  def active_learn
+  def put_active_learn
     @observation = Observation.find(id=params["observation_id"])
     authorize @observation
-    @observation.active_learn = ! @observation.active_learn
+    @observation.active_learn = true
+    @observation.min_notations = params["min_notations"].to_i
     @observation.save
     redirect_to proc { dataset_inference_url(@observation.dataset) }
   end
 
-  def interactive_learn
+  def put_interactive_learn
     @observation = Observation.find(id=params["observation_id"])
     authorize @observation
-    @observation.interactive_learn = ! @observation.interactive_learn
+    @observation.interactive_learn = true
+    @observation.min_notations = params["min_notations"].to_i
     @observation.save
     redirect_to proc { dataset_inference_url(@observation.dataset) }
   end
+
+  def active_learn
+    @observation = Observation.find(id=params["observation_id"])
+    @dataset = @observation.dataset
+    render layout: "dataset"
+  end
+
+  def interactive_learn
+    @observation = Observation.find(id=params["observation_id"])
+    @dataset = @observation.dataset
+    render layout: "dataset"
+  end
+
+  def put_ml_notation
+    @observation = Observation.find(id=params["observation_id"])
+    @ml_notation = MlNotation.where(entry_id: params["entry_id"]).first_or_initialize
+    attributes = {
+      entry_id: params["entry_id"].to_i,
+      attr_value_id: params["attr_value"].to_i,
+      observation_id: params["observation_id"].to_i
+    }
+    respond_to do |format|
+      if @ml_notation.update(attributes)
+        format.json { render json: @ml_notation }
+      end
+    end
+  end
+
+  def put_ml_order
+    @observation = Observation.find(id=params["observation_id"])
+    @ml_order = MlOrder.where(entry_id: params["entry_id"]).first_or_initialize
+    attributes = {
+      entry_id: params["entry_id"].to_i,
+      order: params["order"].to_i,
+      observation_id: params["observation_id"].to_i
+    }
+    respond_to do |format|
+      if @ml_order.update(attributes)
+        format.json { render json: @ml_order }
+      end
+    end
+  end
+
 
   def kfold
     @observation = Observation.find(id=params["observation_id"])
@@ -107,10 +160,24 @@ class ObservationsController < ApplicationController
     end
   end
 
-  def delete_kfold
+  def reportstats
+    @observation = Observation.find(id=params["observation_id"])
+
+    @observation.accuracy = params["acc"]
+    @observation.f1_score = params["f1_score"]
+    @observation.last_run = Time.now
+
+    respond_to do |format|
+      if @observation.save
+        format.json { render json: @observation}
+      end
+    end
+  end
+
+  def delete_interactive_learn
     @observation = Observation.find(id=params["observation_id"])
     authorize @observation
-    @observation.k_fold = nil
+    @observation.interactive_learn = nil
     respond_to do |format|
       if @observation.save
         format.html { redirect_to dataset_inference_url(@observation.dataset), notice: 'Observation was successfully updated.' }
@@ -118,6 +185,19 @@ class ObservationsController < ApplicationController
     end
   end
 
+  def delete_active_learn
+    @observation = Observation.find(id=params["observation_id"])
+    authorize @observation
+    @observation.active_learn = nil
+    respond_to do |format|
+      if @observation.save
+        format.html { redirect_to dataset_inference_url(@observation.dataset), notice: 'Observation was successfully updated.' }
+      end
+    end
+  end
+
+
+  
   # GET /observations/1/edit
   def edit
     @dataset = @observation.dataset

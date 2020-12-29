@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_12_144047) do
+ActiveRecord::Schema.define(version: 2020_12_17_002817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2020_12_12_144047) do
 
   create_table "ml_features", force: :cascade do |t|
     t.bigint "entry_id"
-    t.string "feature"
+    t.text "feature"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["entry_id"], name: "index_ml_features_on_entry_id"
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 2020_12_12_144047) do
     t.integer "k_fold"
     t.boolean "interactive_learn"
     t.boolean "active_learn"
+    t.integer "min_notations"
     t.index ["dataset_id"], name: "index_observations_on_dataset_id"
   end
 
@@ -120,6 +121,7 @@ ActiveRecord::Schema.define(version: 2020_12_12_144047) do
 
   add_foreign_key "attr_values", "observations"
   add_foreign_key "entries", "datasets"
+  add_foreign_key "ml_features", "entries"
   add_foreign_key "ml_notations", "attr_values"
   add_foreign_key "ml_notations", "entries"
   add_foreign_key "ml_notations", "observations"

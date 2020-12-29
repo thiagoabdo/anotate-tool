@@ -1,0 +1,16 @@
+<div class="mt-10 p-4">
+    <p> <bold> Lembrete: A quantidade minima de anotação é compartilhada por classe (o aprendizado ativo e aprendizado iterativo possuem o mesmo valor) e demora um processo de treino para ser atualizada para os anotadores (ou seja, caso o valor seja atualizado para um valor maior do que o atual e a base de dados não possua as classes anotadas, os anotadores só iram parar de ver as sugestões após o processo de treino (geralemente o processo acontece durante a madrugada)) </bold></p>
+    <div>
+        <%= form_with url: observation_put_aa_path(@observation), method: :put do |form| %>
+            <div class="inline-block">
+                <%= form.label :min_notations, "Quantidade de entradas anotadas", class:"inline-block text-gray-700 text-xl font-bold mb-2" %>
+                <%= form.number_field :min_notations, value: @observation.min_notations ? @observation.min_notations : 200, class:"inline-block text-base shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" %>
+            </div>
+
+            <div class="actions m-4 ml-24 mt-10">
+                <%= form.submit "Enviar", class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+            </div>
+          <% end %>
+          <div class="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><%= link_to 'Desabilitar', observation_delete_aa_path(@observation), method: :delete %></div>
+    </div>
+</div>

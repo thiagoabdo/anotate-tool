@@ -19,8 +19,8 @@
     <% @observations.each do |observation| %>
       <tr>
         <td class="h-10 m-2 border-gray-800 border-2 overflow-hidden"><%= observation.name %></td>
-        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.active_learn ? "Desativar AA" : "Ativar AA", observation_aa_path(observation), method: :post %></td>
-        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.interactive_learn ? 'Desativar AI' : 'Ativar AI', observation_ai_path(observation), method: :post %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.active_learn ? "Editar AA" : "Ativar AA", observation_aa_url(observation) %></td>
+        <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.interactive_learn ? 'Editar AI' : 'Ativar AI', observation_ai_url(observation) %></td>
         <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= link_to observation.k_fold ? 'Editar K-Fold' : 'Ativar K-Fold', observation_kfold_url(observation)  %></td>
         <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= observation.last_run %></td>
         <td class="border-gray-800 border-2 m-2 hover:bg-gray-300"><%= observation.accuracy %></td>

@@ -3,6 +3,7 @@ class MlFeaturesController < ApplicationController
   before_action :set_ml_feature, only: [:show, :edit, :update, :destroy]
   after_action :verify_authorized, except: [:index, :kfold, :needfeatures, :getall, :pupdate]
   # TODO: add authorization to getall and pupdate
+  # TODO add constrain of uniqness to entry_id
 
 
 
@@ -37,7 +38,7 @@ class MlFeaturesController < ApplicationController
 
   def needfeatures
     @dataset = params[:dataset_id]
-    @ml_feature = Entry.where(dataset: @dataset).left_outer_joins(:ml_feature).first
+    @ml_feature = Entry.where(dataset: @dataset).left_outer_joins(:ml_feature).where('ml_features.id': nil).first
 
     @need = @ml_feature ? true : false
     respond_to do |format|
@@ -80,11 +81,11 @@ class MlFeaturesController < ApplicationController
       entry_id: params["id"],
       feature: params["feature"]
     }
-    @ml_feature  = MlFeature.where(attributes).first_or_initialize(entry_id: "entry_id")
+    @ml_feature  = MlFeature.where(entry_id: params["id"]).first_or_initialize
 
 
     respond_to do |format|
-      if @ml_feature.update_attributes(attributes)
+      if @ml_feature.update(attributes)
         format.json { render json: @ml_feature }
       else
         format.html { render :edit }
