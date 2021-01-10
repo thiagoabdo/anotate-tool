@@ -13,6 +13,9 @@
       <% end %>
     <% end %>
   </div>
+  <% if @observation.interactive_learn and @ml_notation and @ml_notation.attr_value %>
+    <p class="text-3xl mt-10"> O mecanismo de inferencia acredita que a classe é: <%= @ml_notation.attr_value.value %> </p>
+  <%end %>
   <span class="mt-10">
     <%= link_to 'Voltar para Classes', dataset_choose_class_url(@dataset), class:"mt-4 inline-block text-gray-700 font-bold border-2 border-orange-200 py-2 px-4 rounded-full hover:text-black hover:border-orange-500 focus:outline-none focus:shadow-outline" %>
   </span>

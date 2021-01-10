@@ -1,9 +1,9 @@
 class ObservationsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:getall, :reportstats, :put_ml_notation, :put_ml_order]
-  before_action :authenticate_user!, except: [:index, :show, :getalllearn, :getall, :getallentries, :getallnot, :getallattr , :reportstats, :put_ml_notation, :put_ml_order]
+  skip_before_action :verify_authenticity_token, only: [:getall, :reportstats, :put_ml_notation, :put_ml_order, :del_ml_order]
+  before_action :authenticate_user!, except: [:index, :show, :getalllearn, :getall, :getallentries, :getallnot, :getallattr , :reportstats, :put_ml_notation, :put_ml_order, :del_ml_order]
   before_action :set_observation, only: [:show, :edit, :update, :destroy]
 
-  after_action :verify_authorized, except: [:index, :kfold, :active_learn, :interactive_learn, :getalllearn, :getall, :getallentries, :getallnot, :getallattr, :reportstats, :put_ml_notation, :put_ml_order]
+  after_action :verify_authorized, except: [:index, :kfold, :active_learn, :interactive_learn, :getalllearn, :getall, :getallentries, :getallnot, :getallattr, :reportstats, :put_ml_notation, :put_ml_order, :del_ml_order]
 
   # GET /observations
   # GET /observations.json
@@ -109,7 +109,7 @@ class ObservationsController < ApplicationController
 
   def put_ml_notation
     @observation = Observation.find(id=params["observation_id"])
-    @ml_notation = MlNotation.where(entry_id: params["entry_id"]).first_or_initialize
+    @ml_notation = MlNotation.where(entry_id: params["entry_id"], observation_id: params["observation_id"]).first_or_initialize
     attributes = {
       entry_id: params["entry_id"].to_i,
       attr_value_id: params["attr_value"].to_i,
@@ -123,8 +123,7 @@ class ObservationsController < ApplicationController
   end
 
   def put_ml_order
-    @observation = Observation.find(id=params["observation_id"])
-    @ml_order = MlOrder.where(entry_id: params["entry_id"]).first_or_initialize
+    @ml_order = MlOrder.where(entry_id: params["entry_id"], observation_id: params["observation_id"]).first_or_initialize
     attributes = {
       entry_id: params["entry_id"].to_i,
       order: params["order"].to_i,
@@ -136,6 +135,20 @@ class ObservationsController < ApplicationController
       end
     end
   end
+
+  def del_ml_order
+    @ml_order = MlOrder.where(entry_id: params["entry_id"], observation_id: params["observation_id"]).first_or_initialize
+    attributes = {
+      entry_id: params["entry_id"].to_i,
+      order: nil,
+      observation_id: params["observation_id"].to_i
+    }
+    respond_to do |format|
+      if @ml_order.update(attributes)
+        format.json { render json: @ml_order }
+      end
+    end
+  end    
 
 
   def kfold
@@ -159,6 +172,18 @@ class ObservationsController < ApplicationController
       end
     end
   end
+
+  def delete_kfold
+    @observation = Observation.find(id=params["observation_id"])
+    authorize @observation
+    @observation.k_fold = nil
+    respond_to do |format|
+      if @observation.save
+        format.html { redirect_to dataset_inference_url(@observation.dataset), notice: 'Observation was successfully updated.' }
+      end
+    end
+  end
+
 
   def reportstats
     @observation = Observation.find(id=params["observation_id"])

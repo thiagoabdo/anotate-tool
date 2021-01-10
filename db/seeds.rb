@@ -7,7 +7,46 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-bob = User.create(:email => 'test@c3sl.ufpr.br', :password => '123mudar')
+User.create(:email => 'bob@c3sl.ufpr.br', :password => '123mudar')
+bob = User.where(:email => 'bob@c3sl.ufpr.br').first
+p bob
 
-ds = Dataset.create(:name => 'MeuProjeto', :description => 'Esse é o projeto do Bob')
-rs = Role.create([{ :user_id => bob.id, :dataset_id => ds.id, :role => '0' }])
+ds = Dataset.where(:description => 'Esse é o projeto do Bob', :name => 'Projeto do Bob').first_or_initialize
+ds.save!
+
+rs = Role.where({:user_id => bob.id, :dataset_id => ds.id, :role => 0}).first_or_initialize
+rs.save!
+
+User.create(:email => 'alice@c3sl.ufpr.br', :password => '123mudar')
+alice = User.where(:email => 'alice@c3sl.ufpr.br').first
+p alice
+
+rs2 = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 1}).first_or_initialize
+rs2.save!
+
+Observation.destroy_by(:dataset_id => ds.id)
+easy = Observation.create(:dataset_id => ds.id, :name => "Easy")
+aaa = AttrValue.create(:observation_id => easy.id, :value => "AAA")
+bbb = AttrValue.create(:observation_id => easy.id, :value => "BBB")
+random = Observation.create(:dataset_id => ds.id, :name => "Random")
+r1 = AttrValue.create(:observation_id => random.id, :value => "R1")
+r2 = AttrValue.create(:observation_id => random.id, :value => "R2")
+rand_attr = [r1.id, r2.id]
+
+Entry.destroy_by(:dataset_id => ds.id)
+100.times do |index|
+    e = Entry.create(:dataset_id => ds.id, :text => "AAA " + Faker::Lorem.sentence(word_count:3, supplemental:false, random_words_to_add:2).chop)
+    if index < 50
+        Notation.create(:user_id => bob.id, :attr_value_id => aaa.id, :entry_id => e.id, :observation_id => easy.id)
+        Notation.create(:user_id => bob.id, :attr_value_id => rand_attr.sample, :entry_id => e.id, :observation_id => random.id)
+    end
+end
+
+100.times do |index|
+    e = Entry.create(:dataset_id => ds.id, :text => "BBB " + Faker::Lorem.sentence(word_count:3, supplemental:false, random_words_to_add:2).chop)
+    if index < 50
+        Notation.create(:user_id => bob.id, :attr_value_id => bbb.id, :entry_id => e.id, :observation_id => easy.id)
+        Notation.create(:user_id => bob.id, :attr_value_id => rand_attr.sample, :entry_id => e.id, :observation_id => random.id)
+    end
+end
+

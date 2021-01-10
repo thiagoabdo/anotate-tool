@@ -28,6 +28,7 @@ Rails.application.routes.draw do
 
     put "ml_notation", to: "observations#put_ml_notation"
     put "ml_order", to: "observations#put_ml_order"
+    delete "ml_order", to: "observations#del_ml_order"
   end
   get 'observation/getalllearn', to: "observations#getalllearn"
 
@@ -51,7 +52,6 @@ Rails.application.routes.draw do
     get "download"
     post "download", to: "datasets#generate"
     get "needfeatures", to: "ml_features#needfeatures"
-    get "getallfeatures", to: "ml_features#getall"
     get "inference"
   end
   devise_for :users

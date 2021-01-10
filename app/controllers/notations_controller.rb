@@ -29,10 +29,17 @@ class NotationsController < ApplicationController
     @observation = Observation.find(params[:observation_id])
     #@entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).select(:entry_id)).first  
     sub_query = Notation.from_user_obs(current_user.id, params[:observation_id]).to_sql
-    @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
+    if @observation.active_learn
+      @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).includes(:ml_orders).order('ml_orders.effective_order', 'ml_orders.order').first
+    else
+      @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
+    end
     if !@entry
       redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'
       return
+    end
+    if @observation.interactive_learn
+      @ml_notation = MlNotation.where(entry_id: @entry.id, observation_id: @observation.id).first
     end
     render layout: "dataset"
   end
@@ -53,8 +60,19 @@ class NotationsController < ApplicationController
     @notation = Notation.new(notation_params)
     d = @notation.observation.dataset_id
     c = @notation.observation_id
+    e = @notation.entry_id
+
     respond_to do |format|
       if @notation.save
+        MlOrder.transaction do
+          @ml_order = MlOrder.where(:entry_id => e, :observation_id => c).first_or_initialize
+          max_effective_order = MlOrder.where(:observation_id => c).maximum(:effective_order)
+          if max_effective_order.nil?
+            max_effective_order = 0
+          end
+          @ml_order.effective_order = max_effective_order + 1
+          @ml_order.save!
+        end
         format.html { redirect_to new_dataset_observation_notation_url(d, c), notice: 'Notation was successfully created.' }
         format.json { render :show, status: :created, location: @notation }
       else
