@@ -12,8 +12,8 @@ class NotationsController < ApplicationController
   end
 
   def my_notations
-    @notations = Notation.where(:user_id => current_user.id)
-    @dataset = params[:dataset_id]
+    @dataset = Dataset.find(params["dataset_id"])
+    @notations = Notation.where(:user_id => current_user.id).where(:observation_id => @dataset.observations)
     render layout: "dataset"
   end
 
@@ -85,13 +85,14 @@ class NotationsController < ApplicationController
   # PATCH/PUT /notations/1
   # PATCH/PUT /notations/1.json
   def update
+    d = @notation.observation.dataset_id
     respond_to do |format|
       if @notation.update(notation_params)
-        format.html { redirect_to @notation, notice: 'Notation was successfully updated.' }
+        format.html { redirect_to dataset_mynotations_url(d), notice: 'Notation was successfully updated.' }
         format.json { render :show, status: :ok, location: @notation }
       else
         format.html { render :edit }
-        format.json { render json: @notation.errors, status: :unprocessable_entity }
+        format.json { render json: dataset_mynotations_url(d).errors, status: :unprocessable_entity }
       end
     end
   end
@@ -99,9 +100,10 @@ class NotationsController < ApplicationController
   # DELETE /notations/1
   # DELETE /notations/1.json
   def destroy
+    d = @notation.observation.dataset_id
     @notation.destroy
     respond_to do |format|
-      format.html { redirect_to notations_url, notice: 'Notation was successfully destroyed.' }
+      format.html { redirect_to dataset_mynotations_url(d), notice: 'Notation was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
