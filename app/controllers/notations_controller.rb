@@ -30,9 +30,9 @@ class NotationsController < ApplicationController
     #@entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).select(:entry_id)).first  
     sub_query = Notation.from_user_obs(current_user.id, params[:observation_id]).to_sql
     if @observation.active_learn
-      @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).includes(:ml_orders).order('ml_orders.effective_order', 'ml_orders.order').first
+      @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).includes(:ml_orders).order('ml_orders.effective_order', 'ml_orders.order').first
     else
-      @entry = Entry.joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
+      @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
     end
     if !@entry
       redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'

@@ -29,14 +29,7 @@ class ObservationsController < ApplicationController
     @observation = Observation.find(id=params["observation_id"])
     @notations = Notation.where(observation: @observation)
     @entries = Entry.where(dataset_id: @observation.dataset_id).includes(:ml_feature).references(:ml_feature)
-    #              .joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").select("*").all
-    # how to include subquery.......
-    # chagne this to loop
-    # TODO need to understand how serialization works
-    # TODO need to understand how this fucking active record thing works...
-
-    #serial = @entries.as_json
-    
+     
 
     respond_to do |format|
       format.json { render json: @entries}
