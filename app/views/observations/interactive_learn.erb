@@ -1,5 +1,6 @@
 <div class="mt-10 p-4">
-    <p> <bold> Lembrete: A quantidade minima de anotação é compartilhada por classe (o aprendizado ativo e aprendizado iterativo possuem o mesmo valor) e demora um processo de treino para ser atualizada para os anotadores (ou seja, caso o valor seja atualizado para um valor maior do que o atual e a base de dados não possua as classes anotadas, os anotadores só iram parar de ver as sugestões após o processo de treino (geralemente o processo acontece durante a madrugada)) </bold></p>
+    <p> Lembretes: <br> - A quantidade minima de entradas anotadas é compartilhada por classe ( para o aprendizado ativo e aprendizado iterativo dentro de uma classe).
+    <br> - Demora um ciclo de treino para a alteracoes serem aplicadas (ou seja, caso o valor seja atualizado para um valor maior do que o existente atualmente, os anotadores só irão parar de ver as sugestões após o ciclo de treino).</p>
     <div>
         <%= form_with url: observation_put_ai_path(@observation), method: :put do |form| %>
             <div class="inline-block">
