@@ -9,6 +9,7 @@
         <%= form.hidden_field :observation_id, :value => @observation.id %>
         <%= form.hidden_field :attr_value_id, :value => item.id %>
         <%= form.hidden_field :entry_id, :value => @entry.id %>
+        <%= form.hidden_field :anotate_per_example, :value => @per_example %>
         <%= form.submit item.value, class:"inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"%>
       <% end %>
     <% end %>

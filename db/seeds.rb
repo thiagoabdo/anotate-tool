@@ -25,7 +25,7 @@ rs2 = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 1}).first
 rs2.save!
 
 Observation.destroy_by(:dataset_id => ds.id)
-easy = Observation.create(:dataset_id => ds.id, :name => "Easy")
+easy = Observation.create(:dataset_id , :name => "Easy")
 aaa = AttrValue.create(:observation_id => easy.id, :value => "AAA")
 bbb = AttrValue.create(:observation_id => easy.id, :value => "BBB")
 random = Observation.create(:dataset_id => ds.id, :name => "Random")
@@ -50,3 +50,16 @@ end
     end
 end
 
+
+ds = Dataset.where(:description => 'Esse é o projeto do Alice', :name => 'Projeto do Alice').first_or_initialize
+ds.save!
+rs = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 0}).first_or_initialize
+rs.save!
+Observation.destroy_by(:dataset_id => ds.id)
+easy = Observation.create(: , :name => "EZ2")
+aaa = AttrValue.create(:observation_id => easy.id, :value => "AliceA")
+bbb = AttrValue.create(:observation_id => easy.id, :value => "AliceB")
+Entry.destroy_by(:dataset_id => ds.id)
+20.times do |index|
+    e = Entry.create(:dataset_id => ds.id, :text => "Alice " + Faker::Lorem.sentence(word_count:3, supplemental:false, random_words_to_add:2).chop)
+end

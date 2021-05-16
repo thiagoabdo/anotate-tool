@@ -26,18 +26,29 @@ class NotationsController < ApplicationController
   def new
     @notation = Notation.new
     @dataset = params[:dataset_id]
-    @observation = Observation.find(params[:observation_id])
-    #@entry = Entry.where(:dataset_id =>params[:dataset_id]).where.not(:id => Notation.from_user_obs(current_user.id,params[:observation_id]).select(:entry_id)).first  
-    sub_query = Notation.from_user_obs(current_user.id, params[:observation_id]).to_sql
-    if @observation.active_learn
-      @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).includes(:ml_orders).order('ml_orders.effective_order', 'ml_orders.order').first
+    @per_example = params[:observation_id] == "0"
+    if params[:observation_id] == "0"
+      sub_query = Notation.from_user(current_user.id).to_sql
+      @entry = Entry.where(:dataset_id => params[:dataset_id]).joins("FULL JOIN observations as t0 on t0.dataset_id = entries.dataset_id").joins("LEFT JOIN (#{sub_query}) as t1 on entries.id = t1.entry_id and t0.id = t1.observation_id").where(t1: {entry_id: nil}).first
+      @observation = Observation.where(:dataset_id => params[:dataset_id]).joins("LEFT JOIN (#{Notation.from_user_entry(current_user.id, @entry).to_sql}) as t0 on observations.id = t0.observation_id").where(t0: {observation_id: nil}).first
+      if !@entry
+        redirect_to dataset_choose_class_url(@dataset), notice: 'Database completamente anotado'
+        return
+      end
     else
-      @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
+      sub_query = Notation.from_user_obs(current_user.id, params[:observation_id]).to_sql
+      @observation = Observation.find(params[:observation_id])
+      if @observation.active_learn
+        @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).includes(:ml_orders).order('ml_orders.effective_order', 'ml_orders.order').first
+      else
+        @entry = Entry.where(:dataset_id =>params[:dataset_id]).joins("LEFT JOIN (#{sub_query}) as t0 on entries.id = t0.entry_id").where(t0: {entry_id: nil}).first
+      end
+      if !@entry
+        redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'
+        return
+      end
     end
-    if !@entry
-      redirect_to dataset_choose_class_url(@dataset), notice: 'Classe completamente anotada por voce'
-      return
-    end
+
     if @observation.interactive_learn
       @ml_notation = MlNotation.where(entry_id: @entry.id, observation_id: @observation.id).first
     end
@@ -57,6 +68,7 @@ class NotationsController < ApplicationController
   # POST /notations
   # POST /notations.json
   def create
+    per_example = params[:notation][:anotate_per_example]
     @notation = Notation.new(notation_params)
     d = @notation.observation.dataset_id
     c = @notation.observation_id
@@ -73,8 +85,14 @@ class NotationsController < ApplicationController
           @ml_order.effective_order = max_effective_order + 1
           @ml_order.save!
         end
-        format.html { redirect_to new_dataset_observation_notation_url(d, c), notice: 'Notation was successfully created.' }
-        format.json { render :show, status: :created, location: @notation }
+        puts(per_example)
+        if per_example == "true"
+          format.html { redirect_to new_dataset_observation_notation_url(d, 0), notice: 'Notation was successfully created.' }
+          format.json { render :show, status: :created, location: @notation }
+        else
+          format.html { redirect_to new_dataset_observation_notation_url(d, c), notice: 'Notation was successfully created.' }
+          format.json { render :show, status: :created, location: @notation }
+        end
       else
         format.html { render :new }
         format.json { render json: @notation.errors, status: :unprocessable_entity }
@@ -116,6 +134,7 @@ class NotationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def notation_params
+      params[:notation].delete(:anotate_per_example)
       params.require(:notation).permit(:attr_value_id, :user_id, :entry_id, :observation_id)
     end
 end
