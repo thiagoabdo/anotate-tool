@@ -13,7 +13,7 @@ class NotationsController < ApplicationController
 
   def my_notations
     @dataset = Dataset.find(params["dataset_id"])
-    @notations = Notation.where(:user_id => current_user.id).where(:observation_id => @dataset.observations)
+    @notations = Notation.includes(:observation, :attr_value, :entry).joins(:observation, :attr_value, :entry).where(:user_id => current_user.id).where(:observation_id => @dataset.observations)
     render layout: "dataset"
   end
 
