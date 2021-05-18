@@ -25,7 +25,7 @@ rs2 = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 1}).first
 rs2.save!
 
 Observation.destroy_by(:dataset_id => ds.id)
-easy = Observation.create(:dataset_id , :name => "Easy")
+easy = Observation.create(:dataset_id => ds.id, :name => "Easy")
 aaa = AttrValue.create(:observation_id => easy.id, :value => "AAA")
 bbb = AttrValue.create(:observation_id => easy.id, :value => "BBB")
 random = Observation.create(:dataset_id => ds.id, :name => "Random")
@@ -56,10 +56,31 @@ ds.save!
 rs = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 0}).first_or_initialize
 rs.save!
 Observation.destroy_by(:dataset_id => ds.id)
-easy = Observation.create(: , :name => "EZ2")
+easy = Observation.create(:dataset_id => ds.id , :name => "EZ2")
 aaa = AttrValue.create(:observation_id => easy.id, :value => "AliceA")
 bbb = AttrValue.create(:observation_id => easy.id, :value => "AliceB")
 Entry.destroy_by(:dataset_id => ds.id)
 20.times do |index|
     e = Entry.create(:dataset_id => ds.id, :text => "Alice " + Faker::Lorem.sentence(word_count:3, supplemental:false, random_words_to_add:2).chop)
+end
+
+ds = Dataset.where(:description => 'Bigdata Alice', :name => 'Bigdata do Alice').first_or_initialize
+ds.save!
+rs = Role.where({:user_id => alice.id, :dataset_id => ds.id, :role => 0}).first_or_initialize
+rs.save!
+Observation.destroy_by(:dataset_id => ds.id)
+easy = Observation.create(:dataset_id => ds.id , :name => "EZI")
+aaa = AttrValue.create(:observation_id => easy.id, :value => "AliceA")
+bbb = AttrValue.create(:observation_id => easy.id, :value => "AliceB")
+random = Observation.create(:dataset_id => ds.id, :name => "Random")
+r1 = AttrValue.create(:observation_id => random.id, :value => "R1")
+r2 = AttrValue.create(:observation_id => random.id, :value => "R2")
+rand_attr = [r1.id, r2.id]
+Entry.destroy_by(:dataset_id => ds.id)
+20000.times do |index|
+    e = Entry.create(:dataset_id => ds.id, :text => "BgData Standard data")
+    if index < 10000
+        Notation.create(:user_id => bob.id, :attr_value_id => aaa.id, :entry_id => e.id, :observation_id => easy.id)
+        Notation.create(:user_id => bob.id, :attr_value_id => rand_attr.sample, :entry_id => e.id, :observation_id => random.id)
+    end
 end
