@@ -1,9 +1,0 @@
-<div>
-  <h1 class="text-orange-500 text-xl w-full p-4">Adicione seu CSV(arquivo separado por virgulas), ele não devera ter cabecalhos. Todos os dados serão adicionados ao sua base de entradas! </h1>
-  <%= form_tag({action: :upload}, multipart: true) do%>
-    <%= file_field_tag 'csv_entries'%>
-    <%= hidden_field_tag 'dataset_id', @dataset.id%>
-    <%= submit_tag 'Enviar'%>
-
-  <% end %>   
-</div>
